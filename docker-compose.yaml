@@ -1,0 +1,50 @@
+version: "4.8"
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.10.3.0/24
+          gateway: 172.10.3.254
+
+services:
+  mysql:
+    image: mariadb:10.9
+    container_name: hkrpg-mysql
+    restart: always
+    networks:
+      default:
+        ipv4_address: 172.10.3.100
+    ports:
+      - 5000:3306
+    environment:
+      TZ: "Asia/Shanghai"
+      MYSQL_ROOT_PASSWORD: cokeserver2022
+      MYSQL_ROOT_HOST: "%"
+    volumes:
+      - ./data/database/mysql:/var/lib/mysql
+  redis:
+    image: redis:6.2.6      # redis:latest
+    container_name: hkrpg-redis
+    restart: always
+    networks:
+      default:
+        ipv4_address: 172.10.3.101
+    ports:
+      - 6379:6379
+    volumes:
+      - ./data/database/redis:/data
+    environment:
+      - TZ=Asia/Shanghai
+    command: redis-server --appendonly yes --bind 172.10.3.101 --requirepass cokeserver2022
+  sdkserver:
+    image: hkrpg/cokeserver
+    container_name: hkrpg-sdkserver
+    restart: no
+    networks:
+      default:
+        ipv4_address: 172.10.3.253
+    ports:
+      - 21000:21000
+    volumes:
+      - ./:/opt/hkrpg/sdkserver

@@ -1,0 +1,76 @@
+App:
+  ssl: false
+  host: "127.0.0.1"
+  port: 1234
+  reload: true
+  debug: true
+  threaded: true
+
+Database:
+  mysql:
+    host: 127.0.0.1
+    user: root
+    port: 5000
+    auto_rebuild: true
+    db_name: hkrpg-sdkserver
+    password: cokeserver2022
+
+Api:
+  modified: false
+  protocol: false
+  qr_enabled: false
+  enable_user_center: true
+  disable_ysdk_guard: false
+  enable_announce_pic_popup: false
+  enable_web_dpi: true
+  list_price_tierv2_enable: true
+  modify_real_name_other_verify: true
+  sceneWhiteList: false
+  experimentWhiteList: false
+  device_grant_required: false
+  safe_moblie_required: false
+  realperson_required: false
+  reactivate_required: false
+
+Client:
+  guest: false
+  heartbeat: false
+  disable_regist: false
+  enable_email_captcha: false
+  disable_mmt: false
+  server_guest: false
+  enable_ps_bind_account: false
+  initialize_firebase: false
+  bbs_auth_login: false
+  fetch_instance_id: false
+  enable_flash_login: false
+  enable_logo_18: false
+  enable_cx_bind_account: false
+  firebase_blacklist_devices_switch: false
+  hoyolab_auth_login: false
+  hoyoplay_auth_login: true
+
+
+Security:
+  verify_code_length: 4
+  min_password_len: 8
+
+
+Region:
+  - env: 0
+    title: CokeSR-CN
+    name: dev_gf_cn
+    dispatchUrl: http://127.0.0.1:1234/query_gateway
+  - env: 2
+    title: CokeSR-OS
+    name: dev_gf_cn
+    dispatchUrl: http://127.0.0.1:1234/query_gateway
+
+
+Mail:
+  enable: false
+  mail_server: "smtp.qq.com"
+  mail_port: 587
+  mail_username: ""
+  mail_pasword: ""
+  mail_sender: "CokeSR"
