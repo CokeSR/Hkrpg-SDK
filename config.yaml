@@ -52,6 +52,8 @@ Client:
 
 
 Security:
+  is_sign: true                   # 用于开发者模式的数字签名
+  sign_key: cDyN1GXyw1LRx8R66Tl0tBSjysIXMxnvfkXFqO9DMT3eT0EYjM3dHqEaqmzLEwCj
   verify_code_length: 4
   min_password_len: 8
 

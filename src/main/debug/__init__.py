@@ -2,5 +2,7 @@ __all__ = [
     "showUsers",
     "showSSL",
     "showConfig",
-    "showSystemStatus"
+    "showSystemStatus",
+    "showRegion",
+    "showHotFixRes"
 ]

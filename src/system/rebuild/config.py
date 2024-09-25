@@ -61,6 +61,8 @@ def configRebuild() -> str:
                 "hoyoplay_auth_login": False,
             },
             "Security": {
+                "is_sign": False,
+                "sign_key": "",
                 "verify_code_length": 4,
                 "min_password_len": 8,
             },

@@ -9,3 +9,9 @@ dev.py
 
 # 脚本
 tools/*
+
+# 虚拟环境
+venv/
+
+# idea
+.idea/

@@ -104,4 +104,4 @@ if __name__ == "__main__":
             )
 
     except Exception as err:
-        syslog.error(f"Starting service fail：{err}")
+        syslog.error(f"Starting service fail: {err}")

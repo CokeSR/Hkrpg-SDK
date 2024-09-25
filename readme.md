@@ -1,6 +1,6 @@
-# Hkrpg-SDK (ver 0.8.2) DEMO / github
+# Hkrpg-SDK (ver 0.9.0) DEMO / github
 
-最近更新日期: 2024-09-15
+最近更新日期: 2024-09-25
 
 ---
 项目主地址：https://gitlab.cokeserver.com/Coke/hkrpg-sdk

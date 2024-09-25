@@ -4,39 +4,37 @@ except:
     from main import app
 
 from flask                             import request
-from src.system.loading.database       import get_db
 from src.system.logging.magic          import logger
+from src.system.loading.config         import getConfig
 from src.system.response.jsonMsg       import returnJsonMsg
 from src.system.response.requestVerify import signKeyVerify
 
 import src.system.response.retcode     as path
 
-@app.route('/develop/showUsers', methods = ['GET'])
-def showAccountUsers():
+@app.route('/develop/showRegion', methods = ['GET'])
+def showRegion():
     try:
-        cmd = "showUsers"
+        cmd = "showRegion"
         sign = request.args.get('sign')
         user = request.remote_addr
-        logger.info(f"User: {user} try to get /develop/showUsers/")
+        logger.info(f"User: {user} try to get /develop/showRegion/")
         if sign:
             signed = sign.replace(' ', '+')
+        
             if signKeyVerify(signed, cmd):
-                query = get_db().cursor()
-                query.execute("SELECT * FROM `t_accounts`")
-                data = query.fetchall()
-                logger.info(f"User: {user} query account message succ: {data}")
-                return returnJsonMsg(path.RESPONSE_SUCC, "OK", data)
-
+                dispatchList = getConfig()['Region']
+                logger.info(f'Try to get dispatch region succ: {dispatchList}')
+                return returnJsonMsg(path.RESPONSE_SUCC, "OK", dispatchList)
+            
             else:
                 msg = "sign key verify failed"
-                logger.error(f"User: {user} query account message failed: {msg}")
+                logger.error(f'User: {user} get dispatch region failed: {msg}')
                 return returnJsonMsg(path.RESPONSE_FAIL, "Error", msg)
-    
         else:
             msg = "sign key not found"
-            logger.error(f"User: {user} query account message failed: {msg}")
+            logger.error(f'User: {user} get dispatch region failed: {msg}')
             return returnJsonMsg(path.RESPONSE_FAIL, "Error", msg)
 
     except Exception as err:
-        logger.error(f"User: {user} query account message failed: {err}")
+        logger.error(f"User: {user} get dispatch region failed: {err}")
         return returnJsonMsg(path.RESPONSE_FAIL, "Error", str(err))

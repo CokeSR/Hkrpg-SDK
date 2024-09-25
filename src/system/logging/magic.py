@@ -26,7 +26,7 @@ flask_log.disabled = True
 console_hander = logging.StreamHandler()
 console_hander.setLevel(logging.DEBUG)
 
-file_hander = logging.FileHandler('logs/hkrpg-sdkserver-magic.log', mode="w", encoding="UTF-8")
+file_hander = logging.FileHandler('logs/hkrpg-sdkserver-developer.log', mode="w", encoding="UTF-8")
 file_hander.setLevel(logging.DEBUG)
 
 console_hander.setFormatter(formatter)

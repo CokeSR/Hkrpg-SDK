@@ -58,6 +58,8 @@ def check_config() -> bool:
             "hoyoplay_auth_login": bool,
         },
         "Security": {
+            "is_sign": bool,
+            "sign_key": str,
             "verify_code_length": int,
             "min_password_len": int,
         },
