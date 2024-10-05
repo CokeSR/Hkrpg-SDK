@@ -28,10 +28,18 @@ def accountLoginV2() -> str:
     try:
         data = json.loads(request.json["data"])
         cursor = get_db().cursor(pymysql.cursors.DictCursor)
+        guest_uid = data['uid']
+        is_guest = data['guest']
 
-        token_query = ("SELECT * FROM `t_accounts_tokens` WHERE `token` = %s AND `uid` = %s")
-        cursor.execute(token_query, (data["token"], data["uid"]))
-        user_tokens = cursor.fetchone()
+        if is_guest:
+            device = request.json['device']
+            token_query = ("SELECT * FROM `t_accounts_guests` WHERE `device` = %s")
+            cursor.execute(token_query, device)
+            user_tokens = cursor.fetchone()
+        else:
+            token_query = ("SELECT * FROM `t_accounts_tokens` WHERE `token` = %s AND `uid` = %s")
+            cursor.execute(token_query, (data["token"], data["uid"]))
+            user_tokens = cursor.fetchone()
 
         if not user_tokens:
             return returnJsonMsg(retcode.RESPONSE_FAIL, "游戏账号信息缓存错误", "")
@@ -44,21 +52,38 @@ def accountLoginV2() -> str:
             userlog.error(f"The UID {data['uid']} login token create time: {user_tokens['epoch_generated']}. But expiration time is {tokenExpirationTime}, must be relogin.")
 
             # 清除过期token
-            deleteExpirationToken = "DELETE FROM `t_accounts_tokens` WHERE %s"
-            cursor.execute(deleteExpirationToken, user_tokens["epoch_generated"])
+            if is_guest:
+                deleteExpirationToken = "DELETE FROM `t_accounts_guests` WHERE %s"
+                cursor.execute(deleteExpirationToken, user_tokens["epoch_generated"])
 
-            userlog.error(f"User's uid:{user_tokens['uid']} login Failed. Token is expiration.")
-            userlog.error(f"Delete expiration token:{user_tokens['token']}, User's uid:{user_tokens['uid']}")
-            return returnJsonMsg(retcode.RESPONSE_FAIL, "账号Token过期，请点击右上角重新登录", "")
+                userlog.error(f"Guest user's uid: {guest_uid} login Failed. Token is expiration.")
+                userlog.error(f"Delete expiration token:{user_tokens['token']}, Guest user's uid: {guest_uid}")
+                return returnJsonMsg(retcode.RESPONSE_FAIL, "游客登录Token过期，请点击右上角重新获取", "")
+            else:
+                deleteExpirationToken = "DELETE FROM `t_accounts_tokens` WHERE %s"
+                cursor.execute(deleteExpirationToken, user_tokens["epoch_generated"])
+
+                userlog.error(f"User's uid: {user_tokens['uid']} login Failed. Token is expiration.")
+                userlog.error(f"Delete expiration token:{user_tokens['token']}, User's uid: {user_tokens['uid']}")
+                return returnJsonMsg(retcode.RESPONSE_FAIL, "账号Token过期，请点击右上角重新登录", "")
 
         # 用户检查
-        user_query = "SELECT * FROM `t_accounts` WHERE `uid` = %s AND `type` = %s"
-        cursor.execute(user_query, (user_tokens["uid"], retcode.ACCOUNT_TYPE_NORMAL))
-        user = cursor.fetchone()
+        if is_guest:
+            user_query = "SELECT * FROM `t_accounts` WHERE `uid` = %s AND `type` = %s"
+            cursor.execute(user_query, (guest_uid, retcode.ACCOUNT_TYPE_GUEST))
+            user = cursor.fetchone()
 
-        if not user:
-            userlog.info(f"User's uid:{user_tokens['uid']} login Failed. User not found")
-            return returnJsonMsg(retcode.RESPONSE_FAIL, "未找到用户", "")
+            if not user:
+                userlog.info(f"Guest user's uid: {guest_uid} login Failed. User not found")
+                return returnJsonMsg(retcode.RESPONSE_FAIL, "未找到用户", "")
+        else:
+            user_query = "SELECT * FROM `t_accounts` WHERE `uid` = %s AND `type` = %s"
+            cursor.execute(user_query, (user_tokens["uid"], retcode.ACCOUNT_TYPE_NORMAL))
+            user = cursor.fetchone()
+
+            if not user:
+                userlog.info(f"User's uid: {user_tokens['uid']} login Failed. User not found")
+                return returnJsonMsg(retcode.RESPONSE_FAIL, "未找到用户", "")
 
         # 写入 comboToken
         ip = request_ip(request)
@@ -81,8 +106,13 @@ def accountLoginV2() -> str:
             "fatigue_remind": None,
         }
 
-        userlog.info(f"User's uid:{user_tokens['uid']} login successful, combo_token:{combo_token}")
+        if is_guest:
+            userlog.info(f"Guest user's uid: {guest_uid} login successful, combo_token:{combo_token}")
+        else:
+            userlog.info(f"User's uid: {user_tokens['uid']} login successful, combo_token:{combo_token}")
+
         return returnJsonMsg(retcode.RESPONSE_SUCC, "OK", data)
+
     except Exception as err:
         userlog.error(f"Systemctl error: {err}")
         return returnJsonMsg(retcode.RESPONSE_FAIL, "系统错误，请联系管理员", "")

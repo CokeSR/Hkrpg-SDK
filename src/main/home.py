@@ -23,7 +23,7 @@ def index():
             </style>
         </head>
         <body>
-            <span>Welcome to visit SDK for <font color="red">Hongkai: Star Rail</font> (ver 0.9.0 By CokeSR)</span>
+            <span>Welcome to visit SDK for <font color="red">Hongkai: Star Rail</font> (ver 0.9.3 By CokeSR)</span>
             <br>
             <span>Please click link below to continue</span>
             <hr>

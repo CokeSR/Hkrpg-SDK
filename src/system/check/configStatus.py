@@ -1,7 +1,7 @@
 from src.system.logging.systemctl   import logger
 from src.system.loading.config      import getConfig
 
-def check_config() -> bool:
+def checkConfig() -> bool:
     config = getConfig()
     required_settings = {
         "App": {

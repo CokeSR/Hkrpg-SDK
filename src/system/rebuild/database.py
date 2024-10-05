@@ -64,8 +64,11 @@ def rebuildData() -> bool:
         cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS `t_accounts_guests` (
-                `uid` INT NOT NULL COMMENT '玩家UID',
                 `device` VARCHAR(255) NOT NULL COMMENT '设备ID',
+                `client` VARCHAR(255) NOT NULL COMMENT '客户端类型',
+                `version` VARCHAR(255) NOT NULL COMMENT '客户端版本',
+                `token` VARCHAR(255) NOT NULL COMMENT '游客登录Token',
+                `epoch_generated` INT NOT NULL COMMENT 'Token时间戳',
                 PRIMARY KEY(`uid`,`device`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
             COMMENT='游客登录信息表'

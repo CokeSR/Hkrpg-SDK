@@ -7,3 +7,4 @@ python_bcrypt==0.3.2
 pytz==2022.1
 PyYAML==6.0.2
 Requests==2.32.3
+pyOpenSSL==24.2.1

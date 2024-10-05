@@ -33,7 +33,7 @@ Api:
   reactivate_required: false
 
 Client:
-  guest: false
+  guest: true
   heartbeat: false
   disable_regist: false
   enable_email_captcha: false

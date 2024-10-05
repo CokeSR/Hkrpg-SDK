@@ -15,8 +15,12 @@ from src.system.rebuild.config      import configRebuild
 from src.system.check.emailStatus   import checkEmailConn
 from src.system.check.regionConn    import checkRegionConn
 from src.system.check.databaseConn  import checkMysqlConn
-from src.system.check.configStatus  import check_config, checkRegion
 from src.system.check.hotFixStatus  import checkHotFixRes
+from src.system.check.socketVerify  import checkSSL
+from src.system.check.configStatus  import (
+    checkConfig, 
+    checkRegion
+)
 
 
 app = Flask(__name__,
@@ -57,12 +61,13 @@ except FileNotFoundError:
 
 # Check services action
 servicesCheckDict = {
-    check_config: "CHECK CONFIG SETTINGS FAILED",
+    checkConfig: "CHECK CONFIG SETTINGS FAILED",
     checkMysqlConn: "CHECK DATABASE STATUS FAILED",
     checkEmailConn: "CHECK EMAIL SERVICE FAILED",
     checkRegion: "CHECK DISPATCH REGION FAILED",
     checkRegionConn: "CHECK REGION CONNECT FAILED",
     checkHotFixRes: "CHECK HOTFIX RESOURCE FAILED",
+    checkSSL: "CHECK SSL STATUS FAILED",
 }
 
 for checkFunc, errMsg in servicesCheckDict.items():
@@ -102,6 +107,7 @@ if __name__ == "__main__":
                 use_reloader = settings['reload'],
                 threaded = settings['threaded'],
             )
-
+    except FileNotFoundError as err:
+        syslog.error(f"SSL file not found, please check config path: /data/ssl/")
     except Exception as err:
         syslog.error(f"Starting service fail: {err}")

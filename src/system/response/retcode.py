@@ -35,3 +35,6 @@ HOTFIX_RES_PATH = "data/hotFix/resource.json"
 
 SSL_KEY_PATH = "data/ssl/server.key"
 SSL_PEM_PATH = "data/ssl/server.pem"
+
+GUEST_LOGIN_SUCC = 0
+GUEST_LOGIN_FAIL = -110
